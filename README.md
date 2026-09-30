@@ -67,7 +67,6 @@ flowchart TB
 ```bash
 # 1. Clone
 git clone https://github.com/samprit07/kaushaltrace.git
-cd kaushaltrace
 
 # 2. Environment
 python -m venv .venv
