@@ -1,0 +1,9 @@
+course_id,course_name,sector,occupation,skill_category
+C001,Electrician,Electrical,Electrician,Technical
+C002,Solar PV Technician,Renewable Energy,Solar PV Installer,Technical
+C003,Data Entry Operator,IT/ITeS,Data Entry Operator,Digital
+C004,Retail Sales Associate,Retail,Sales Associate,Service
+C005,Healthcare Assistant,Healthcare,Healthcare Assistant,Healthcare
+C006,Welding Technician,Manufacturing,Welder,Technical
+C007,Beauty & Wellness Assistant,Beauty,Beauty Therapist,Service
+C008,Food Processing Technician,Food Processing,Food Processing Operator,Technical

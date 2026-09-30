@@ -1,0 +1,24 @@
+KaushalTrace — dual portal + redesigned UI
+==========================================
+
+Problem alignment (SIH26135)
+- Consent-based trainee records
+- Training linked to placement / employment / self-employment / apprenticeship
+- Automated + assisted follow-ups, retention & wage signals
+- Evidence-based verification (not automatic claims)
+- Admin: cohort / course / provider / district analytics + impact filters
+- Trainee: privacy-scoped personal journey only
+
+Run
+  cd "Kaushal trace backend"
+  pip install -r requirements.txt
+  uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+  Open http://127.0.0.1:8000
+
+Logins
+  Trainee: trainee1 / trainee123
+  Admin:   admin / admin@kaushaltrace2026
+
+UI notes
+  Purple→blue gradient, glass cards, Inter + Space Grotesk + Instrument Serif,
+  Lucide/Bootstrap icons, grain overlay, cursor beam, fade-in reveals.

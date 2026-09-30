@@ -1,0 +1,13 @@
+employer_id,employer_name,industry,district,state,verification_status
+E001,ABC Electricals,Electrical,North Goa,Goa,VERIFIED
+E002,XYZ Manufacturing,Manufacturing,South Goa,Goa,VERIFIED
+E003,Coastal Solar Pvt Ltd,Renewable Energy,North Goa,Goa,VERIFIED
+E004,Konkan Retail,Retail,South Goa,Goa,VERIFIED
+E005,HealthFirst Services,Healthcare,Mumbai,Goa,VERIFIED
+E006,Western Weldworks,Manufacturing,Pune,Goa,VERIFIED
+E007,Goa Digital Services,IT/ITeS,North Goa,Goa,VERIFIED
+E008,GreenGrid Energy,Renewable Energy,Pune,Goa,VERIFIED
+E009,Mangaluru FoodWorks,Food Processing,Mangaluru,Goa,VERIFIED
+E010,Urban Beauty Studio,Beauty,Mumbai,Goa,VERIFIED
+E011,Daman Industrial Works,Manufacturing,Daman,Goa,VERIFIED
+E012,SkillBridge Services,IT/ITeS,Goa,Goa,VERIFIED

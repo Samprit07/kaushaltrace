@@ -1,0 +1,101 @@
+trainee_id,name,age_group,gender,education_level,district,consent_status,consent_date
+KT0001,Aarav Sharma,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0002,Priya Sharma,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0003,Rohan Sharma,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0004,Ananya Sharma,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0005,Vikram Sharma,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0006,Neha Sharma,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0007,Arjun Sharma,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0008,Meera Sharma,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0009,Rahul Sharma,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0010,Isha Sharma,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0011,Karan Sharma,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0012,Sneha Sharma,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0013,Aditya Sharma,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0014,Kavya Sharma,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0015,Nikhil Sharma,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0016,Pooja Sharma,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0017,Sahil Sharma,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0018,Diya Sharma,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0019,Manav Sharma,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0020,Riya Sharma,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0021,Aarav Naik,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0022,Priya Naik,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0023,Rohan Naik,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0024,Ananya Naik,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0025,Vikram Naik,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0026,Neha Naik,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0027,Arjun Naik,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0028,Meera Naik,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0029,Rahul Naik,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0030,Isha Naik,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0031,Karan Naik,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0032,Sneha Naik,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0033,Aditya Naik,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0034,Kavya Naik,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0035,Nikhil Naik,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0036,Pooja Naik,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0037,Sahil Naik,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0038,Diya Naik,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0039,Manav Naik,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0040,Riya Naik,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0041,Aarav Patil,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0042,Priya Patil,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0043,Rohan Patil,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0044,Ananya Patil,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0045,Vikram Patil,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0046,Neha Patil,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0047,Arjun Patil,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0048,Meera Patil,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0049,Rahul Patil,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0050,Isha Patil,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0051,Karan Patil,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0052,Sneha Patil,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0053,Aditya Patil,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0054,Kavya Patil,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0055,Nikhil Patil,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0056,Pooja Patil,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0057,Sahil Patil,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0058,Diya Patil,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0059,Manav Patil,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0060,Riya Patil,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0061,Aarav Desai,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0062,Priya Desai,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0063,Rohan Desai,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0064,Ananya Desai,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0065,Vikram Desai,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0066,Neha Desai,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0067,Arjun Desai,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0068,Meera Desai,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0069,Rahul Desai,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0070,Isha Desai,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0071,Karan Desai,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0072,Sneha Desai,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0073,Aditya Desai,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0074,Kavya Desai,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0075,Nikhil Desai,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0076,Pooja Desai,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0077,Sahil Desai,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0078,Diya Desai,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0079,Manav Desai,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0080,Riya Desai,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0081,Aarav Singh,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0082,Priya Singh,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0083,Rohan Singh,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0084,Ananya Singh,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0085,Vikram Singh,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0086,Neha Singh,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0087,Arjun Singh,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0088,Meera Singh,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05
+KT0089,Rahul Singh,26-30,Male,Higher Secondary,Pune,GRANTED,2026-01-05
+KT0090,Isha Singh,18-21,Female,Diploma,Mangaluru,GRANTED,2026-01-05
+KT0091,Karan Singh,22-25,Male,Graduate,North Goa,GRANTED,2026-01-05
+KT0092,Sneha Singh,26-30,Female,Secondary,South Goa,GRANTED,2026-01-05
+KT0093,Aditya Singh,18-21,Male,Higher Secondary,Daman,GRANTED,2026-01-05
+KT0094,Kavya Singh,22-25,Female,Diploma,Mumbai,GRANTED,2026-01-05
+KT0095,Nikhil Singh,26-30,Male,Graduate,Pune,GRANTED,2026-01-05
+KT0096,Pooja Singh,18-21,Female,Secondary,Mangaluru,GRANTED,2026-01-05
+KT0097,Sahil Singh,22-25,Male,Higher Secondary,North Goa,GRANTED,2026-01-05
+KT0098,Diya Singh,26-30,Female,Diploma,South Goa,GRANTED,2026-01-05
+KT0099,Manav Singh,18-21,Male,Graduate,Daman,GRANTED,2026-01-05
+KT0100,Riya Singh,22-25,Female,Secondary,Mumbai,GRANTED,2026-01-05

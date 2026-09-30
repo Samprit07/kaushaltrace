@@ -1,0 +1,1962 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KaushalTrace — Longitudinal Skilling Outcomes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root{
+      --purple:#7C3AED;
+      --blue:#2563EB;
+      --indigo:#4F46E5;
+      --green:#10B981;
+      --amber:#F59E0B;
+      --red:#EF4444;
+      --bg:#F4F1FB;
+      --card:rgba(255,255,255,.72);
+      --card-solid:#FFFFFF;
+      --line:rgba(124,58,237,.14);
+      --muted:#6B7280;
+      --text:#1E1B2E;
+      --sidebar:272px;
+      --shadow:0 18px 50px rgba(76,29,149,.10);
+      --radius:22px;
+      --grad:linear-gradient(135deg,#7C3AED 0%,#4F46E5 45%,#2563EB 100%);
+      --grad-soft:linear-gradient(135deg,rgba(124,58,237,.16),rgba(37,99,235,.12));
+      --font-sans:"Inter",system-ui,-apple-system,sans-serif;
+      --font-display:"Space Grotesk","Inter",sans-serif;
+      --font-serif:"Instrument Serif",Georgia,serif;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:var(--font-sans);
+      letter-spacing:-0.011em;
+      min-height:100vh;
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    /* Grain over gradient */
+    body::before{
+      content:"";
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,.22), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(37,99,235,.18), transparent 50%),
+        var(--bg);
+    }
+    body::after{
+      content:"";
+      position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.055;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size:180px;
+    }
+
+    /* Dark mode — light text on dark surfaces */
+    body.dark{
+      --bg:#0E0B16;
+      --card:rgba(24,20,38,.72);
+      --card-solid:#161222;
+      --line:rgba(167,139,250,.14);
+      --muted:#C4B5FD;
+      --text:#F5F3FF;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      color-scheme:dark;
+    }
+    body.dark::before{
+      background:
+        radial-gradient(1000px 500px at 15% -10%, rgba(124,58,237,.18), transparent 55%),
+        radial-gradient(800px 400px at 100% 10%, rgba(37,99,235,.12), transparent 50%),
+        #0E0B16;
+    }
+    body.dark,
+    body.dark .cardx,
+    body.dark .section-card,
+    body.dark .stat,
+    body.dark .meta,
+    body.dark .evidence,
+    body.dark .table,
+    body.dark .modal-content,
+    body.dark .drawer,
+    body.dark .page-title,
+    body.dark .section-title,
+    body.dark .fw-bold,
+    body.dark .fw-semibold,
+    body.dark td,
+    body.dark th,
+    body.dark p,
+    body.dark label,
+    body.dark li,
+    body.dark h1,body.dark h2,body.dark h3,body.dark h4,body.dark h5,body.dark h6{
+      color:var(--text);
+    }
+    body.dark .topbar{background:rgba(14,11,22,.82);border-color:var(--line)}
+    body.dark .top-search input,
+    body.dark .form-control{
+      background:rgba(22,18,34,.9)!important;
+      color:#F5F3FF!important;
+      border-color:var(--line)!important;
+    }
+    body.dark .form-select{
+      border-color:var(--line)!important;
+    }
+    body.dark .form-control::placeholder,
+    body.dark .top-search input::placeholder{color:#A78BFA!important;opacity:.85}
+    body.dark{
+      --bs-body-color:#F5F3FF;
+      --bs-secondary-color:#C4B5FD;
+      --bs-tertiary-color:#A78BFA;
+      --bs-emphasis-color:#FFFFFF;
+      --bs-border-color:rgba(167,139,250,.14);
+    }
+    body.dark .table{
+      --bs-table-color:#F5F3FF;
+      --bs-table-bg:transparent;
+      --bs-table-border-color:rgba(167,139,250,.18);
+      --bs-table-striped-color:#F5F3FF;
+      --bs-table-striped-bg:rgba(255,255,255,.03);
+      --bs-table-hover-color:#FFFFFF;
+      --bs-table-hover-bg:rgba(167,139,250,.08);
+      --bs-table-color-state:#F5F3FF;
+      --bs-table-color-type:#F5F3FF;
+      color:#F5F3FF !important;
+    }
+    body.dark .table thead th{
+      background:rgba(22,18,34,.9) !important;
+      color:#E9D5FF !important;
+      border-color:rgba(167,139,250,.2) !important;
+    }
+    body.dark .table td,
+    body.dark .table th,
+    body.dark .table> :not(caption)>*>*{
+      border-color:rgba(167,139,250,.16) !important;
+      color:#F5F3FF !important;
+      background-color:transparent !important;
+    }
+    body.dark .table-sm td,
+    body.dark .table-sm th{color:#F5F3FF !important}
+    body.dark .table-responsive,
+    body.dark .table-wrap{color:#F5F3FF}
+    body.dark .meta,body.dark .evidence{background:rgba(22,18,34,.7);border-color:var(--line);color:#F5F3FF}
+    body.dark .meta *,body.dark .evidence *{color:inherit}
+    body.dark .btn-soft{background:rgba(22,18,34,.85);color:#E9D5FF!important;border-color:var(--line)}
+    body.dark .modal-content,body.dark .drawer{background:var(--card-solid);color:#F5F3FF}
+    body.dark .section-sub,
+    body.dark .page-desc,
+    body.dark .text-muted,
+    body.dark .text-secondary,
+    body.dark .stat-label,
+    body.dark .meta-label,
+    body.dark .empty{color:#C4B5FD!important}
+    body.dark hr{border-color:var(--line)!important}
+    body.dark .status-green{background:rgba(16,185,129,.22);color:#6EE7B7!important}
+    body.dark .status-amber{background:rgba(245,158,11,.22);color:#FCD34D!important}
+    body.dark .status-red{background:rgba(239,68,68,.22);color:#FCA5A5!important}
+    body.dark .status-blue{background:rgba(37,99,235,.22);color:#93C5FD!important}
+    body.dark .status-slate{background:rgba(148,163,184,.2);color:#E2E8F0!important}
+    body.dark a:not(.side-link):not(.btn-brand){color:#C4B5FD}
+    body.dark .text-primary{color:#A78BFA!important}
+    body.dark .form-select option{background:#161222;color:#F5F3FF}
+    body.dark .form-select{
+      background-color:rgba(22,18,34,.95)!important;
+      color:#F5F3FF!important;
+      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23E9D5FF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e")!important;
+      background-repeat:no-repeat!important;
+      background-position:right .75rem center!important;
+      background-size:16px 12px!important;
+      -webkit-appearance:none!important;
+      -moz-appearance:none!important;
+      appearance:none!important;
+      padding-right:2.25rem!important;
+    }
+
+    button,input,select,textarea{font:inherit}
+    a{text-decoration:none;color:inherit}
+
+    .app-shell{min-height:100vh;display:flex;position:relative;z-index:1}
+
+    /* Sidebar */
+    .sidebar{
+      width:var(--sidebar);
+      background:linear-gradient(180deg,#1a1030 0%,#0f172a 55%,#0b1220 100%);
+      color:#C4B5FD;
+      position:fixed;inset:0 auto 0 0;z-index:1100;
+      padding:22px 14px;
+      display:flex;flex-direction:column;
+      border-right:1px solid rgba(167,139,250,.12);
+      box-shadow:8px 0 40px rgba(76,29,149,.15);
+    }
+    .brand{display:flex;align-items:center;gap:12px;padding:4px 10px 22px}
+    .brand-mark{
+      width:44px;height:44px;border-radius:14px;
+      background:var(--grad);color:#fff;font-weight:800;
+      display:grid;place-items:center;
+      font-family:var(--font-display);
+      box-shadow:0 12px 28px rgba(124,58,237,.35);
+    }
+    .brand-title{font-family:var(--font-display);font-weight:700;font-size:1.05rem;color:#fff;letter-spacing:-.03em}
+    .brand-sub{font-size:.72rem;color:#A78BFA;opacity:.9}
+
+    .nav-section{
+      font-size:.65rem;text-transform:uppercase;letter-spacing:.14em;
+      color:#8B5CF6;padding:16px 12px 8px;font-weight:600;
+    }
+    .side-link{
+      display:flex;align-items:center;gap:10px;
+      padding:11px 14px;margin:3px 4px;
+      border-radius:14px;color:#DDD6FE;font-size:.9rem;font-weight:500;
+      transition:all .25s ease;border:1px solid transparent;
+    }
+    .side-link:hover{background:rgba(124,58,237,.18);color:#fff}
+    .side-link.active{
+      background:var(--grad);color:#fff;
+      box-shadow:0 10px 24px rgba(124,58,237,.28);
+    }
+    .side-link i,.side-link svg{width:18px;opacity:.95}
+
+    .sidebar-bottom{margin-top:auto;padding:12px 6px 4px}
+    .user-mini{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(167,139,250,.15);
+      border-radius:18px;padding:14px;
+      backdrop-filter:blur(12px);
+    }
+
+    /* Main */
+    .main-wrap{margin-left:var(--sidebar);flex:1;min-width:0;position:relative;z-index:1}
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;gap:14px;
+      padding:14px 22px;
+      background:rgba(244,241,251,.78);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    body.dark .topbar{background:rgba(14,11,22,.78)}
+    .top-search{flex:1;position:relative;max-width:520px}
+    .top-search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    .top-search input{
+      width:100%;border-radius:999px;border:1px solid var(--line);
+      padding:11px 16px 11px 40px;background:var(--card);backdrop-filter:blur(10px);
+      color:var(--text);outline:none;
+    }
+    .top-actions{display:flex;align-items:center;gap:10px;margin-left:auto}
+    .system-chip,.role-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:7px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
+      border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);
+    }
+    .system-chip .dot{width:7px;height:7px;border-radius:50%;background:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+
+    .content{padding:10px 26px 48px; max-width:1280px}
+
+    /* Inconsistent spacing (intentional AI-slop spacing rhythm) */
+    .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin:8px 0 28px}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      color:#7C3AED;background:rgba(124,58,237,.1);
+      border:1px solid rgba(124,58,237,.2);
+      padding:5px 10px;border-radius:999px;margin-bottom:12px;
+    }
+    .page-title{
+      font-family:var(--font-display);
+      font-size:clamp(1.7rem, 2.4vw, 2.35rem);
+      font-weight:700;letter-spacing:-.04em;line-height:1.12;
+      background:var(--grad);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      margin-bottom:8px;
+    }
+    .page-title .serif-accent{
+      font-family:var(--font-serif);font-style:italic;font-weight:400;
+      background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--text);
+    }
+    .page-desc{color:var(--muted);max-width:58ch;font-size:.95rem;line-height:1.55}
+
+    /* Glass morphism + colored border cards */
+    .cardx, .section-card, .meta, .evidence, .trainee-hero{
+      background:var(--card);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      position:relative;
+    }
+    .cardx, .section-card{
+      padding:20px 22px;
+      border-top:3px solid transparent;
+      border-image:var(--grad) 1;
+      border-image-slice:1;
+      border-width:3px 1px 1px 1px;
+      border-style:solid;
+      border-color:transparent var(--line) var(--line) var(--line);
+      border-top-color:#7C3AED;
+    }
+    .section-card{margin-bottom:18px}
+    .section-title{
+      font-family:var(--font-display);
+      font-size:1.02rem;font-weight:700;letter-spacing:-.02em;
+    }
+    .section-sub{color:var(--muted);font-size:.86rem;margin-top:4px}
+
+    /* KPI / icon boxes in a row */
+    .kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    @media (max-width:992px){.kpi-grid{grid-template-columns:1fr}}
+    .stat{
+      padding:18px 18px 16px;
+      border-left:4px solid #7C3AED;
+      transition:transform .25s ease, box-shadow .25s ease, opacity .25s ease;
+    }
+    .stat:nth-child(2){border-left-color:#4F46E5;margin-top:6px}
+    .stat:nth-child(3){border-left-color:#2563EB;margin-top:12px}
+    .stat:nth-child(4){border-left-color:#10B981}
+    .stat:hover{transform:translateY(-3px);box-shadow:0 20px 40px rgba(124,58,237,.14)}
+    .stat-icon{
+      width:42px;height:42px;border-radius:14px;
+      display:grid;place-items:center;margin-bottom:12px;
+      background:var(--grad-soft);color:#6D28D9;
+    }
+    .stat-value{font-family:var(--font-display);font-size:1.65rem;font-weight:700;letter-spacing:-.03em}
+    .stat-label{color:var(--muted);font-size:.82rem;margin-top:2px}
+
+    /* Buttons — fade on hover */
+    .btn-brand,.btn-soft{
+      border-radius:999px;padding:10px 18px;font-weight:600;font-size:.88rem;
+      border:1px solid transparent;cursor:pointer;
+      transition:opacity .25s ease, transform .2s ease, box-shadow .25s ease;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    .btn-brand{
+      background:var(--grad);color:#fff;
+      box-shadow:0 10px 24px rgba(124,58,237,.28);
+    }
+    .btn-brand:hover{opacity:.72;transform:translateY(-1px)}
+    .btn-soft{
+      background:rgba(255,255,255,.55);border-color:var(--line);color:var(--text);
+    }
+    body.dark .btn-soft{background:rgba(255,255,255,.04)}
+    .btn-soft:hover{opacity:.7}
+
+    .status,.badge-soft{
+      display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;
+      font-size:.72rem;font-weight:700;letter-spacing:.02em;
+    }
+    .status-green{background:rgba(16,185,129,.12);color:#059669}
+    .status-amber{background:rgba(245,158,11,.14);color:#B45309}
+    .status-red{background:rgba(239,68,68,.12);color:#DC2626}
+    .status-blue{background:rgba(37,99,235,.12);color:#2563EB}
+    .status-slate{background:rgba(100,116,139,.12);color:#64748B}
+
+    .table{
+      --bs-table-bg:transparent;
+      --bs-table-color:var(--text);
+      --bs-table-border-color:var(--line);
+      color:var(--text);
+      font-size:.9rem;
+    }
+    .table thead th{
+      font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;
+      color:var(--muted);border-bottom:1px solid var(--line);font-weight:700;
+    }
+    .table td,.table th{vertical-align:middle;border-color:var(--line);color:var(--text)}
+    .table-wrap,.table-responsive{border-radius:16px;overflow:auto}
+
+    .meta,.evidence{padding:12px 14px;margin-bottom:8px}
+    .meta-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    .meta-value{font-weight:600;margin-top:2px}
+    .meta-grid{display:grid;gap:10px}
+
+    .chart-box{position:relative;height:260px}
+    .empty{text-align:center;padding:28px 16px;color:var(--muted)}
+
+    /* Login */
+    .login-screen{
+      position:fixed;inset:0;z-index:2000;
+      display:grid;place-items:center;
+      background:
+        radial-gradient(circle at 20% 20%,rgba(124,58,237,.22),transparent 30%),
+        radial-gradient(circle at 80% 30%,rgba(37,99,235,.16),transparent 28%),
+        #0E0B16;
+    }
+    .login-screen::before{
+      content:"";position:absolute;inset:0;opacity:.06;pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .login-card{
+      width:min(440px,92vw);
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(167,139,250,.22);
+      border-radius:28px;padding:32px;
+      backdrop-filter:blur(22px);
+      box-shadow:0 30px 100px rgba(76,29,149,.28);
+      position:relative;z-index:1;
+      color:#F5F3FF;
+    }
+    .login-logo{
+      width:54px;height:54px;border-radius:17px;
+      background:var(--grad);display:grid;place-items:center;
+      color:#fff;font-size:22px;font-weight:900;font-family:var(--font-display);
+    }
+    .login-title{
+      font-family:var(--font-display);font-size:1.55rem;font-weight:700;
+      background:linear-gradient(135deg,#E9D5FF,#93C5FD);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .login-help{font-size:.8rem;color:#C4B5FD;line-height:1.55}
+    .login-card .form-control{
+      background:rgba(15,10,28,.55);border:1px solid rgba(167,139,250,.25);color:#fff;border-radius:12px;
+    }
+    .login-card .form-label{color:#DDD6FE}
+    .portal-tab{background:rgba(255,255,255,.06)!important;color:#E9D5FF!important;border-color:rgba(167,139,250,.2)!important}
+    .portal-tab.active{background:var(--grad)!important;color:#fff!important;border-color:transparent!important}
+
+    .trainee-hero{
+      background:var(--grad-soft);
+      border:1px solid rgba(124,58,237,.2);
+      padding:24px;
+    }
+    .journey-step{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+    .journey-step:last-child{border-bottom:0}
+    .journey-dot{
+      width:36px;height:36px;border-radius:50%;
+      background:var(--grad);color:#fff;
+      display:grid;place-items:center;flex-shrink:0;font-weight:700;font-size:.8rem;
+      box-shadow:0 8px 18px rgba(124,58,237,.25);
+    }
+
+    /* Fade-in on scroll */
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    /* Cursor-following beam */
+    #cursorBeam{
+      position:fixed;width:280px;height:280px;border-radius:50%;
+      pointer-events:none;z-index:50;
+      background:radial-gradient(circle, rgba(124,58,237,.16) 0%, rgba(37,99,235,.06) 40%, transparent 70%);
+      transform:translate(-50%,-50%);
+      transition:left .08s linear, top .08s linear;
+      mix-blend-mode:screen;
+    }
+    body:not(.dark) #cursorBeam{mix-blend-mode:multiply}
+
+    .menu-toggle{display:none;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 10px}
+    @media (max-width:960px){
+      .sidebar{transform:translateX(-105%)}
+      .sidebar.open{transform:none}
+      .main-wrap{margin-left:0}
+      .menu-toggle{display:inline-flex}
+      .content{padding:12px 16px 40px}
+    }
+
+    .drawer{position:fixed;top:0;right:0;width:min(420px,100%);height:100%;background:var(--card-solid);z-index:1200;transform:translateX(105%);transition:.25s;box-shadow:-20px 0 60px rgba(0,0,0,.15);padding:18px;overflow:auto}
+    .drawer.open{transform:none}
+    .overlay{position:fixed;inset:0;background:rgba(15,10,28,.45);z-index:1150;opacity:0;pointer-events:none;transition:.2s}
+    .overlay.show{opacity:1;pointer-events:auto}
+    .toast-wrap{position:fixed;right:18px;bottom:18px;z-index:1400;display:flex;flex-direction:column;gap:8px}
+    .kt-toast{background:var(--card-solid);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);min-width:240px}
+
+  </style>
+</head>
+
+<body>
+  <div id="cursorBeam"></div>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="login-logo">K</div>
+        <div>
+          <div class="login-title">KaushalTrace</div>
+          <div class="text-muted small">Admin outcome intelligence</div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="fw-bold fs-5" style="font-family:var(--font-display)">Unlock outcome intelligence</div>
+        <div class="login-help mt-1">
+          A next-generation, privacy-conscious platform for longitudinal skilling impact —
+          seamlessly bridging training signals with real-world livelihood outcomes.
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mb-3">
+        <button type="button" class="btn-soft flex-fill portal-tab active" data-portal="trainee" id="tabTrainee">
+          <i class="bi bi-person-badge me-1"></i> Trainee
+        </button>
+        <button type="button" class="btn-soft flex-fill portal-tab" data-portal="admin" id="tabAdmin">
+          <i class="bi bi-shield-lock me-1"></i> Admin
+        </button>
+      </div>
+
+      <form id="loginForm">
+        <input type="hidden" id="loginPortal" value="trainee">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Username</label>
+          <input id="loginUsername" class="form-control" autocomplete="username" value="trainee1" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Password</label>
+          <input id="loginPassword" type="password" class="form-control" autocomplete="current-password" value="trainee123" required>
+        </div>
+        <div id="loginError" class="alert alert-danger d-none py-2 small"></div>
+        <button class="btn-brand w-100 py-2" type="submit">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign in
+        </button>
+      </form>
+
+      <div class="login-help mt-3" id="loginHint">
+        <strong>Trainee demo:</strong> trainee1 / trainee123 (KT0001)<br>
+        Also: trainee2 / trainee123 · trainee3 / trainee123
+      </div>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay"></div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">K</div>
+      <div>
+        <div class="brand-title">KaushalTrace</div>
+        <div class="brand-sub">Outcome Intelligence</div>
+      </div>
+    </div>
+
+    <div class="nav-section" data-trainee-only>My portal</div>
+    <a class="side-link" data-trainee-only data-route="/my-journey" href="#/my-journey"><i class="bi bi-signpost-split"></i> My journey</a>
+    <a class="side-link" data-trainee-only data-route="/my-training" href="#/my-training"><i class="bi bi-mortarboard"></i> My training</a>
+    <a class="side-link" data-trainee-only data-route="/my-outcomes" href="#/my-outcomes"><i class="bi bi-briefcase"></i> Outcomes & work</a>
+    <a class="side-link" data-trainee-only data-route="/my-followups" href="#/my-followups"><i class="bi bi-telephone"></i> Follow-ups</a>
+    <a class="side-link" data-trainee-only data-route="/my-privacy" href="#/my-privacy"><i class="bi bi-shield-check"></i> Consent & privacy</a>
+
+    <div class="nav-section" data-admin-only>Workspace</div>
+    <a class="side-link" data-admin-only data-route="/dashboard" href="#/dashboard"><i class="bi bi-grid-1x2"></i> Analytics Overview</a>
+    <a class="side-link" data-admin-only data-route="/trainees" href="#/trainees"><i class="bi bi-people"></i> Trainee Directory</a>
+    <a class="side-link" data-admin-only data-route="/claims" href="#/claims"><i class="bi bi-patch-check"></i> Claims & Verification</a>
+    <a class="side-link" data-admin-only data-route="/followups" href="#/followups"><i class="bi bi-telephone"></i> Follow-up Tracing</a>
+    <a class="side-link" data-admin-only data-route="/analytics" href="#/analytics"><i class="bi bi-bar-chart-line"></i> Deep Analytics</a>
+
+    <div class="nav-section mt-4">Administration</div>
+    <a class="side-link" data-admin-only data-route="/audit" href="#/audit"><i class="bi bi-journal-text"></i> Audit Log</a>
+
+    <div class="sidebar-bottom">
+      <div class="user-mini">
+        <div class="d-flex align-items-center gap-2">
+          <div class="avatar" style="width:34px;height:34px;border-radius:10px;font-size:12px">AD</div>
+          <div class="min-w-0">
+            <div id="sideUserName" class="text-white fw-bold small text-truncate">Administrator</div>
+            <div id="sideUserRole" class="text-secondary" style="font-size:10px">SUPER_ADMIN</div>
+          </div>
+        </div>
+        <button id="logoutBtn" class="btn btn-sm btn-outline-light w-100 mt-3" style="font-size:11px">Sign out</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <button id="menuToggle" class="menu-toggle"><i class="bi bi-list"></i></button>
+
+      <div class="top-search">
+        <i class="bi bi-search"></i>
+        <input id="globalSearch" placeholder="Search trainees, claims or IDs...">
+      </div>
+
+      <div class="top-actions">
+        <span class="system-chip"><span class="dot"></span> API connected</span>
+        <span class="role-chip"><i class="bi bi-shield-check"></i><span id="topRole">ADMIN</span></span>
+        <button id="themeBtn" class="btn-soft" title="Toggle theme"><i class="bi bi-moon-stars"></i></button>
+        <button id="refreshBtn" class="btn-soft" title="Refresh current page"><i class="bi bi-arrow-clockwise"></i></button>
+      </div>
+    </header>
+
+    <main id="app" class="content"></main>
+  </div>
+
+  <div id="toastWrap" class="toast-wrap"></div>
+
+  <div id="actionModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 id="modalTitle" class="modal-title fw-bold">Confirm action</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="modalDescription" class="small text-muted mb-3"></div>
+          <label class="form-label small fw-bold">Audit remark</label>
+          <textarea id="modalRemarks" class="form-control" rows="4" placeholder="Explain why this action was taken..."></textarea>
+          <input id="modalRecordId" type="hidden">
+          <input id="modalActionType" type="hidden">
+        </div>
+        <div class="modal-footer border-0">
+          <button class="btn-soft" data-bs-dismiss="modal">Cancel</button>
+          <button id="modalConfirm" class="btn-brand">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="drawer" class="drawer">
+    <div class="drawer-head">
+      <div>
+        <div id="drawerTitle" class="fw-bold">Record</div>
+        <div id="drawerSub" class="text-muted small"></div>
+      </div>
+      <button id="drawerClose" class="btn-soft"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div id="drawerBody" class="drawer-body"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const API_BASE =
+      (location.port === "8000" || location.protocol === "file:")
+        ? ""
+        : "http://127.0.0.1:8000";
+
+    const state = {
+      token: localStorage.getItem("kt_token") || localStorage.getItem("kt_admin_token"),
+      user: null,
+      admin: null,
+      charts: {},
+      cache: {}
+    };
+
+    function isTrainee() {
+      return state.user && String(state.user.kind || state.user.role).toUpperCase() === "TRAINEE";
+    }
+    function isAdmin() {
+      return state.user && String(state.user.kind || "").toUpperCase() === "ADMIN";
+    }
+
+    const $ = (id) => document.getElementById(id);
+
+    function esc(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function initials(name) {
+      return String(name || "KT")
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map(x => x[0])
+        .join("")
+        .toUpperCase();
+    }
+
+    function apiUrl(path) {
+      return API_BASE + path;
+    }
+
+    function statusClass(status) {
+      const s = String(status || "").toUpperCase();
+      if (["VERIFIED","CORROBORATED","SUPPORTED","RETAINED"].includes(s)) return "status-green";
+      if (["REPORTED","PENDING","APPRENTICESHIP"].includes(s)) return "status-amber";
+      if (["CONFLICT","REJECTED","FLAGGED"].includes(s)) return "status-red";
+      if (s === "EMPLOYED") return "status-blue";
+      return "status-slate";
+    }
+
+    function badge(status) {
+      return `<span class="status ${statusClass(status)}">${esc(status || "UNKNOWN")}</span>`;
+    }
+
+    function pretty(value) {
+      return String(value ?? "—").replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function showToast(message, type = "normal") {
+      const el = document.createElement("div");
+      el.className = "kt-toast";
+      el.innerHTML = `<div class="d-flex align-items-start gap-2">
+        <i class="bi ${type === "error" ? "bi-exclamation-triangle" : "bi-check-circle"}"></i>
+        <div>${esc(message)}</div>
+      </div>`;
+      $("toastWrap").appendChild(el);
+      setTimeout(() => el.remove(), 3400);
+    }
+
+    function clearCharts() {
+      Object.values(state.charts).forEach(c => { try { c.destroy(); } catch {} });
+      state.charts = {};
+    }
+
+    function isDarkMode() {
+      return document.body.classList.contains("dark");
+    }
+
+    function chartThemeDefaults() {
+      const dark = isDarkMode();
+      const tick = dark ? "#E9D5FF" : "#6B7280";
+      const grid = dark ? "rgba(167,139,250,.18)" : "rgba(124,58,237,.10)";
+      return {
+        color: tick,
+        borderColor: grid,
+        plugins: {
+          legend: {
+            labels: { color: tick, boxWidth: 12, padding: 14 }
+          },
+          tooltip: {
+            backgroundColor: dark ? "rgba(22,18,34,.95)" : "rgba(30,27,46,.92)",
+            titleColor: "#F5F3FF",
+            bodyColor: "#E9D5FF",
+            borderColor: dark ? "rgba(167,139,250,.3)" : "transparent",
+            borderWidth: 1
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: tick },
+            grid: { color: grid },
+            border: { color: grid }
+          },
+          y: {
+            ticks: { color: tick },
+            grid: { color: grid },
+            border: { color: grid }
+          }
+        }
+      };
+    }
+
+    function mergeChartOptions(userOpts = {}) {
+      const theme = chartThemeDefaults();
+      const merged = { ...userOpts };
+      merged.plugins = {
+        ...theme.plugins,
+        ...(userOpts.plugins || {}),
+        legend: {
+          ...theme.plugins.legend,
+          ...((userOpts.plugins && userOpts.plugins.legend) || {}),
+          labels: {
+            ...theme.plugins.legend.labels,
+            ...((userOpts.plugins && userOpts.plugins.legend && userOpts.plugins.legend.labels) || {})
+          }
+        },
+        tooltip: {
+          ...theme.plugins.tooltip,
+          ...((userOpts.plugins && userOpts.plugins.tooltip) || {})
+        }
+      };
+      if (userOpts.scales) {
+        merged.scales = {};
+        for (const axis of Object.keys(userOpts.scales)) {
+          const u = userOpts.scales[axis] || {};
+          const t = theme.scales[axis] || theme.scales.x;
+          merged.scales[axis] = {
+            ...u,
+            ticks: { ...(t.ticks || {}), ...(u.ticks || {}) },
+            grid: { ...(t.grid || {}), ...(u.grid || {}) },
+            border: { ...(t.border || {}), ...(u.border || {}) }
+          };
+        }
+      } else if (userOpts.indexAxis || true) {
+        merged.scales = theme.scales;
+      }
+      return merged;
+    }
+
+    function chart(canvasId, config) {
+      const canvas = $(canvasId);
+      if (!canvas) return;
+      try { state.charts[canvasId]?.destroy(); } catch {}
+      const cfg = { ...config, options: mergeChartOptions(config.options || {}) };
+      state.charts[canvasId] = new Chart(canvas.getContext("2d"), cfg);
+    }
+
+    const CSV_CATEGORIES = [
+      { id: "trainees", label: "Trainees", file: "trainees.csv", desc: "Trainee master list" },
+      { id: "training_records", label: "Training", file: "training_records.csv", desc: "Course enrollment & completion" },
+      { id: "outcome_claims", label: "Outcome claims", file: "outcome_claims.csv", desc: "Reported outcomes" },
+      { id: "employment_records", label: "Employment", file: "employment_records.csv", desc: "Employment placements" },
+      { id: "wage_records", label: "Wages", file: "wage_records.csv", desc: "Wage band records" },
+      { id: "verification_records", label: "Verification", file: "verification_records.csv", desc: "Evidence verification" },
+      { id: "evidence_records", label: "Evidence", file: "evidence_records.csv", desc: "Supporting evidence" },
+      { id: "followups", label: "Follow-ups", file: "followups.csv", desc: "Retention checkpoints" },
+      { id: "transitions", label: "Transitions", file: "transitions.csv", desc: "Status transitions" },
+      { id: "providers", label: "Providers", file: "providers.csv", desc: "Training providers" },
+      { id: "courses", label: "Courses", file: "courses.csv", desc: "Course catalogue" },
+      { id: "employers", label: "Employers", file: "employers.csv", desc: "Employer directory" }
+    ];
+
+    async function downloadCsvCategory(fileName) {
+      try {
+        const headers = new Headers({ Accept: "text/csv" });
+        if (state.token) headers.set("Authorization", `Bearer ${state.token}`);
+        const res = await fetch(apiUrl(`/analytics/csv/${encodeURIComponent(fileName)}`), { headers });
+        if (!res.ok) throw new Error(`Could not download ${fileName}`);
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        toast(`Downloaded ${fileName}`);
+      } catch (e) {
+        toast(e.message || "CSV download failed", "error");
+      }
+    }
+
+    async function copyCsvCategory(fileName) {
+      try {
+        const headers = new Headers({ Accept: "text/csv" });
+        if (state.token) headers.set("Authorization", `Bearer ${state.token}`);
+        const res = await fetch(apiUrl(`/analytics/csv/${encodeURIComponent(fileName)}`), { headers });
+        if (!res.ok) throw new Error(`Could not load ${fileName}`);
+        const text = await res.text();
+        await navigator.clipboard.writeText(text);
+        toast(`Copied ${fileName} to clipboard`);
+      } catch (e) {
+        toast(e.message || "CSV copy failed", "error");
+      }
+    }
+
+    function csvExportPanel() {
+      return `
+        <div class="cardx section-card mt-3">
+          <div class="section-title">CSV export by category</div>
+          <div class="section-sub mb-3">Copy or download source CSV datasets used for analysis. Each category maps to a different analysis view.</div>
+          <div class="row g-2">
+            ${CSV_CATEGORIES.map(c => `
+              <div class="col-md-6 col-xl-4">
+                <div class="meta d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                  <div>
+                    <div class="fw-bold small">${esc(c.label)}</div>
+                    <div class="text-muted" style="font-size:11px">${esc(c.desc)}</div>
+                  </div>
+                  <div class="d-flex gap-1">
+                    <button class="btn-soft" style="padding:6px 10px;font-size:12px" title="Copy CSV" onclick="copyCsvCategory('${c.file}')"><i class="bi bi-clipboard"></i></button>
+                    <button class="btn-soft" style="padding:6px 10px;font-size:12px" title="Download CSV" onclick="downloadCsvCategory('${c.file}')"><i class="bi bi-download"></i></button>
+                  </div>
+                </div>
+              </div>`).join("")}
+          </div>
+        </div>`;
+    }
+
+    function tableToCsv(tableId) {
+      const table = document.getElementById(tableId);
+      if (!table) throw new Error("Table not found");
+      const rows = [];
+      table.querySelectorAll("tr").forEach(tr => {
+        if (tr.style.display === "none") return;
+        const cells = [...tr.querySelectorAll("th,td")].map(cell => {
+          let t = (cell.innerText || "").trim().replace(/\s+/g, " ");
+          if (t.includes(",") || t.includes('"') || t.includes("\n")) {
+            t = '"' + t.replace(/"/g, '""') + '"';
+          }
+          return t;
+        });
+        if (cells.length) rows.push(cells.join(","));
+      });
+      return rows.join("\n");
+    }
+
+    async function copyTableAsCsv(tableId, fileName) {
+      try {
+        const csv = tableToCsv(tableId);
+        await navigator.clipboard.writeText(csv);
+        toast(`Copied ${fileName || tableId} to clipboard`);
+      } catch (e) {
+        toast(e.message || "Could not copy table CSV", "error");
+      }
+    }
+
+    function downloadTableAsCsv(tableId, fileName) {
+      try {
+        const csv = tableToCsv(tableId);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName || (tableId + ".csv");
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        toast(`Downloaded ${fileName || tableId}`);
+      } catch (e) {
+        toast(e.message || "Could not download table CSV", "error");
+      }
+    }
+
+    async function api(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      headers.set("Accept", "application/json");
+
+      if (options.body && !(options.body instanceof FormData)) {
+        headers.set("Content-Type", "application/json");
+      }
+
+      if (state.token) {
+        headers.set("Authorization", `Bearer ${state.token}`);
+      }
+
+      const response = await fetch(apiUrl(path), { ...options, headers });
+
+      if (response.status === 401) {
+        state.token = null;
+        state.admin = null;
+        localStorage.removeItem("kt_token");
+        localStorage.removeItem("kt_admin_token");
+        showLogin();
+        throw new Error("Session expired. Please sign in again.");
+      }
+
+      let data = null;
+      const text = await response.text();
+      try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+
+      if (!response.ok) {
+        const detail = data?.detail || data?.message || `Request failed (${response.status})`;
+        throw new Error(detail);
+      }
+
+      return data;
+    }
+
+    async function login(username, password, portal) {
+      const data = await api("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ username, password, portal: portal || "auto" })
+      });
+
+      state.token = data.access_token;
+      localStorage.setItem("kt_token", state.token);
+      localStorage.removeItem("kt_admin_token");
+      state.user = await api("/api/auth/me");
+      state.admin = isAdmin() ? state.user : null;
+      hideLogin();
+      applyShellForRole();
+      updateUserChrome();
+      if (isTrainee()) location.hash = "#/my-journey";
+      else location.hash = "#/dashboard";
+      router();
+    }
+
+    function applyShellForRole() {
+      const adminLinks = document.querySelectorAll("[data-admin-only]");
+      const traineeLinks = document.querySelectorAll("[data-trainee-only]");
+      adminLinks.forEach(el => { el.style.display = isAdmin() ? "" : "none"; });
+      traineeLinks.forEach(el => { el.style.display = isTrainee() ? "" : "none"; });
+      const brandSub = document.querySelector(".brand-sub");
+      if (brandSub) {
+        brandSub.textContent = isTrainee()
+          ? "My skilling outcomes"
+          : "Programme intelligence";
+      }
+    }
+
+    function showLogin() {
+      $("loginScreen").style.display = "grid";
+    }
+
+    function hideLogin() {
+      $("loginScreen").style.display = "none";
+    }
+
+    function updateUserChrome() {
+      if (!state.user) return;
+      $("sideUserName").textContent = state.user.full_name || state.user.username;
+      $("sideUserRole").textContent = state.user.role || state.user.kind;
+      $("topRole").textContent = state.user.role || state.user.kind;
+    }
+
+    function route() {
+      const raw = location.hash.replace(/^#/, "");
+      return raw || "/dashboard";
+    }
+
+    function updateNav() {
+      const r = route();
+      document.querySelectorAll(".side-link").forEach(a => {
+        const target = a.dataset.route;
+        a.classList.toggle("active", r === target || r.startsWith(target + "/"));
+      });
+    }
+
+    function layout(title, desc, actions = "", emoji = "✨") {
+      const eyebrow = isTrainee()
+        ? "Trainee portal — privacy-first outcomes"
+        : "Programme intelligence — longitudinal impact";
+      // Serif italic accent on last word when multi-word title
+      const parts = String(title || "").split(" ");
+      let titleHtml;
+      if (parts.length > 1) {
+        const last = parts.pop();
+        titleHtml = `${esc(parts.join(" "))} <span class="serif-accent">${esc(last)}</span>`;
+      } else {
+        titleHtml = esc(title);
+      }
+      return `<div class="page-head reveal">
+        <div>
+          <div class="eyebrow"><i data-lucide="sparkles" style="width:12px;height:12px"></i> ${esc(eyebrow)}</div>
+          <div class="page-title">${emoji} ${titleHtml}</div>
+          <div class="page-desc">${esc(desc)}</div>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">${actions}</div>
+      </div>`;
+    }
+
+    function paintIcons() {
+      try { if (window.lucide) lucide.createIcons(); } catch (_) {}
+      document.querySelectorAll(".reveal").forEach(el => {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("visible"); });
+        }, { threshold: 0.12 });
+        io.observe(el);
+      });
+      // also mark already visible
+      requestAnimationFrame(() => document.querySelectorAll(".reveal").forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight) el.classList.add("visible");
+      }));
+    }
+
+    function statCard(icon, value, label, accent = "blue") {
+      return `<div class="cardx stat reveal">
+        <div class="stat-icon"><i class="bi ${icon}"></i></div>
+        <div class="stat-value">${esc(value)}</div>
+        <div class="stat-label">${esc(label)}</div>
+      </div>`;
+    }
+
+    function meta(label, value) {
+      return `<div class="meta"><div class="meta-label">${esc(label)}</div><div class="meta-value">${esc(value ?? "—")}</div></div>`;
+    }
+
+    function renderLoading(title = "Loading") {
+      $("app").innerHTML = `<div class="page-head">
+        <div><div class="eyebrow">KaushalTrace</div><div class="page-title">${esc(title)}</div></div>
+      </div>
+      <div class="cardx section-card">
+        <div class="skeleton mb-3" style="width:40%"></div>
+        <div class="skeleton mb-2" style="width:90%"></div>
+        <div class="skeleton" style="width:72%"></div>
+      </div>`;
+    }
+
+    async function renderDashboard() {
+      clearCharts();
+      renderLoading("Analytics Overview");
+
+      const [overview, verification, employment, types, matrix] = await Promise.all([
+        api("/analytics/overview"),
+        api("/analytics/verification"),
+        api("/analytics/employment"),
+        api("/analytics/employment-by-type"),
+        api("/analytics/impact-matrix")
+      ]);
+
+      const vmap = Object.fromEntries((verification.statuses || []).map(x => [x.status, x.count]));
+      const typeMap = Object.fromEntries((types || []).map(x => [String(x.employment_type || "UNKNOWN").toUpperCase(), x.count]));
+
+      $("app").innerHTML = `
+        ${layout("Analytics Overview","A holistic view of trainees, outcomes, evidence quality — and employment signals across the ecosystem.",
+          `<button class="btn-brand" onclick="location.hash='#/claims'"><i class="bi bi-patch-check me-1"></i> Review queue</button>`)}
+        <div class="kpi-grid mb-4">
+          ${statCard("bi-people",overview.trainees,"Trainees tracked","blue")}
+          ${statCard("bi-mortarboard",overview.training_records,"Training records","green")}
+          ${statCard("bi-briefcase",employment.employed_trainees,"Employment records","amber")}
+          ${statCard("bi-shield-check",vmap.CORROBORATED || 0,"Corroborated","green")}
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-xl-7">
+            <div class="cardx section-card h-100">
+              <div class="section-title">Outcome distribution</div>
+              <div class="section-sub">Current employment records by type.</div>
+              <div class="chart-box mt-3"><canvas id="outcomeChart"></canvas></div>
+            </div>
+          </div>
+          <div class="col-xl-5">
+            <div class="cardx section-card h-100">
+              <div class="section-title">Evidence quality</div>
+              <div class="section-sub">Verification records produced by the rule engine.</div>
+              <div class="chart-box mt-3"><canvas id="verificationChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <div class="cardx section-card">
+              <div class="section-title">System inventory</div>
+              <div class="section-sub mb-3">Records currently available to the application.</div>
+              <div class="row g-2">
+                ${meta("Outcome claims",overview.outcome_claims)}
+                ${meta("Employment records",overview.employment_records)}
+                ${meta("Wage records",overview.wage_records)}
+                ${meta("Follow-ups",overview.followups)}
+                ${meta("Transitions",overview.transitions)}
+                ${meta("Providers",overview.providers)}
+                ${meta("Courses",overview.courses)}
+                ${meta("Employers",overview.employers)}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="cardx section-card h-100">
+              <div class="section-title">Employment signal</div>
+              <div class="section-sub mb-3">This is record coverage, not a causal success score.</div>
+              <div class="display-6 fw-bold">${esc(employment.employment_rate)}%</div>
+              <div class="text-muted small">Trainees with employment records</div>
+              <hr>
+              <div class="d-flex justify-content-between small mb-2"><span>Verified</span><strong>${employment.verified_employment_trainees}</strong></div>
+              <div class="d-flex justify-content-between small"><span>Reported</span><strong>${employment.reported_employment_trainees}</strong></div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <div class="cardx section-card">
+              <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+                <div>
+                  <div class="section-title">Impact by region, course &amp; employer</div>
+                  <div class="section-sub">Accountability views: where people trained, which courses, which companies absorbed talent. Graphs + CSV export for each category.</div>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <select id="filterDistrict" class="form-select form-select-sm" style="min-width:140px">
+                    <option value="">All districts</option>
+                    ${(matrix.by_district||[]).map(r=>`<option value="${esc(r.district)}">${esc(r.district)}</option>`).join("")}
+                  </select>
+                  <select id="filterCourse" class="form-select form-select-sm" style="min-width:160px">
+                    <option value="">All courses</option>
+                    ${(matrix.by_course||[]).map(r=>`<option value="${esc(r.course_name)}">${esc(r.course_name)}</option>`).join("")}
+                  </select>
+                  <select id="filterEmployer" class="form-select form-select-sm" style="min-width:160px">
+                    <option value="">All employers</option>
+                    ${(matrix.by_employer||[]).map(r=>`<option value="${esc(r.employer_name)}">${esc(r.employer_name)}</option>`).join("")}
+                  </select>
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-xl-4">
+                  <div class="section-title mb-1">District graph</div>
+                  <div class="section-sub mb-2">Trained vs positive outcomes</div>
+                  <div class="chart-box"><canvas id="impactDistrictChart"></canvas></div>
+                </div>
+                <div class="col-xl-4">
+                  <div class="section-title mb-1">Course graph</div>
+                  <div class="section-sub mb-2">Placement rate by course</div>
+                  <div class="chart-box"><canvas id="impactCourseChart"></canvas></div>
+                </div>
+                <div class="col-xl-4">
+                  <div class="section-title mb-1">Employer graph</div>
+                  <div class="section-sub mb-2">Placements by employer</div>
+                  <div class="chart-box"><canvas id="impactEmployerChart"></canvas></div>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-lg-4">
+                  <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                    <div class="section-title mb-0">By district / region</div>
+                    <div class="d-flex gap-1">
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Copy table as CSV" onclick="copyTableAsCsv('tblDistrict','district_impact.csv')"><i class="bi bi-clipboard me-1"></i>CSV</button>
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Download table as CSV" onclick="downloadTableAsCsv('tblDistrict','district_impact.csv')"><i class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                  <div class="table-responsive" style="max-height:320px">
+                    <table class="table table-sm" id="tblDistrict">
+                      <thead><tr><th>District</th><th>Trained</th><th>Positive</th><th>Rate</th></tr></thead>
+                      <tbody>
+                        ${(matrix.by_district||[]).map(r=>`<tr data-district="${esc(r.district)}">
+                          <td>${esc(r.district)}</td>
+                          <td>${esc(r.trainees)}</td>
+                          <td>${esc(r.positive_outcomes)}</td>
+                          <td>${esc(r.placement_rate)}%</td>
+                        </tr>`).join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                    <div class="section-title mb-0">By training course</div>
+                    <div class="d-flex gap-1">
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Copy table as CSV" onclick="copyTableAsCsv('tblCourse','course_impact.csv')"><i class="bi bi-clipboard me-1"></i>CSV</button>
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Download table as CSV" onclick="downloadTableAsCsv('tblCourse','course_impact.csv')"><i class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                  <div class="table-responsive" style="max-height:320px">
+                    <table class="table table-sm" id="tblCourse">
+                      <thead><tr><th>Course</th><th>Trained</th><th>Placed</th><th>Rate</th></tr></thead>
+                      <tbody>
+                        ${(matrix.by_course||[]).map(r=>`<tr data-course="${esc(r.course_name)}">
+                          <td>${esc(r.course_name)}</td>
+                          <td>${esc(r.trainees)}</td>
+                          <td>${esc(r.positive_outcomes)}</td>
+                          <td>${esc(r.placement_rate)}%</td>
+                        </tr>`).join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                    <div class="section-title mb-0">By employer / company</div>
+                    <div class="d-flex gap-1">
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Copy table as CSV" onclick="copyTableAsCsv('tblEmployer','employer_impact.csv')"><i class="bi bi-clipboard me-1"></i>CSV</button>
+                      <button class="btn-soft" style="padding:5px 10px;font-size:11px" title="Download table as CSV" onclick="downloadTableAsCsv('tblEmployer','employer_impact.csv')"><i class="bi bi-download"></i></button>
+                    </div>
+                  </div>
+                  <div class="table-responsive" style="max-height:320px">
+                    <table class="table table-sm" id="tblEmployer">
+                      <thead><tr><th>Employer</th><th>Placements</th><th>Trainees</th><th>Verified</th></tr></thead>
+                      <tbody>
+                        ${(matrix.by_employer||[]).map(r=>`<tr data-employer="${esc(r.employer_name)}">
+                          <td>${esc(r.employer_name)}</td>
+                          <td>${esc(r.placements)}</td>
+                          <td>${esc(r.unique_trainees)}</td>
+                          <td>${esc(r.verified_records)}</td>
+                        </tr>`).join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${csvExportPanel()}
+`;
+
+      chart("outcomeChart", {
+        type:"doughnut",
+        data:{labels:Object.keys(typeMap).map(pretty),datasets:[{data:Object.values(typeMap),backgroundColor:["#2563EB","#10B981","#F59E0B","#8B5CF6","#EF4444"],borderWidth:0}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:"64%",plugins:{legend:{position:"bottom"}}}
+      });
+
+      chart("verificationChart", {
+        type:"bar",
+        data:{labels:["Corroborated","Supported","Reported","Conflict","Unknown"],datasets:[{label:"Cases",data:["CORROBORATED","SUPPORTED","REPORTED","CONFLICT","UNKNOWN"].map(k=>vmap[k]||0),backgroundColor:["#10B981","#2563EB","#F59E0B","#EF4444","#94A3B8"],borderRadius:8}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}
+      });
+
+      const distRows = matrix.by_district || [];
+      chart("impactDistrictChart", {
+        type:"bar",
+        data:{
+          labels: distRows.map(r => r.district),
+          datasets:[
+            { label:"Trained", data: distRows.map(r => r.trainees), backgroundColor:"#8B5CF6", borderRadius:6 },
+            { label:"Positive", data: distRows.map(r => r.positive_outcomes), backgroundColor:"#10B981", borderRadius:6 }
+          ]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}
+      });
+
+      const courseRows = matrix.by_course || [];
+      chart("impactCourseChart", {
+        type:"bar",
+        data:{
+          labels: courseRows.map(r => r.course_name),
+          datasets:[{ label:"Placement rate %", data: courseRows.map(r => r.placement_rate), backgroundColor:"#2563EB", borderRadius:6 }]
+        },
+        options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100},y:{grid:{display:false}}}}
+      });
+
+      const empRows = matrix.by_employer || [];
+      chart("impactEmployerChart", {
+        type:"bar",
+        data:{
+          labels: empRows.map(r => r.employer_name),
+          datasets:[{ label:"Placements", data: empRows.map(r => r.placements), backgroundColor:"#F59E0B", borderRadius:6 }]
+        },
+        options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}},y:{grid:{display:false}}}}
+      });
+    
+      const applyImpactFilters = () => {
+        const d = ($("filterDistrict") && $("filterDistrict").value) || "";
+        const c = ($("filterCourse") && $("filterCourse").value) || "";
+        const e = ($("filterEmployer") && $("filterEmployer").value) || "";
+        document.querySelectorAll("#tblDistrict tbody tr").forEach(tr => {
+          tr.style.display = (!d || tr.getAttribute("data-district") === d) ? "" : "none";
+        });
+        document.querySelectorAll("#tblCourse tbody tr").forEach(tr => {
+          tr.style.display = (!c || tr.getAttribute("data-course") === c) ? "" : "none";
+        });
+        document.querySelectorAll("#tblEmployer tbody tr").forEach(tr => {
+          tr.style.display = (!e || tr.getAttribute("data-employer") === e) ? "" : "none";
+        });
+      };
+      ["filterDistrict", "filterCourse", "filterEmployer"].forEach(id => {
+        const el = $(id);
+        if (el) el.addEventListener("change", applyImpactFilters);
+      });
+
+    }
+
+    async function renderTrainees() {
+      clearCharts();
+      renderLoading("Trainee Directory");
+      const trainees = await api("/trainees");
+      state.cache.trainees = trainees;
+
+      $("app").innerHTML = `
+        ${layout("Trainee Directory","Search the longitudinal trainee registry and open a complete evidence timeline.",
+          `<button class="btn-brand" onclick="loadTrainees()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh</button>`)}
+        <div class="cardx section-card">
+          <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+            <div><div class="section-title">Trainee registry</div><div class="section-sub">${trainees.length} records</div></div>
+            <div class="d-flex gap-2">
+              <input id="traineeSearch" class="form-control" style="width:260px" placeholder="Search name or ID">
+              <select id="outcomeFilter" class="filter"><option value="">All outcomes</option><option>EMPLOYED</option><option>SELF_EMPLOYED</option><option>APPRENTICESHIP</option><option>HIGHER_EDUCATION</option><option>SEEKING_WORK</option><option>UNEMPLOYED</option><option>UNKNOWN</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table align-middle">
+              <thead><tr><th>Trainee</th><th>Course</th><th>District</th><th>Attendance</th><th>Assessment</th><th>Outcome</th><th>Verification</th><th></th></tr></thead>
+              <tbody id="traineeRows"></tbody>
+            </table>
+          </div>
+        </div>`;
+      function fill() {
+        const q = $("traineeSearch").value.toLowerCase();
+        const f = $("outcomeFilter").value;
+        const rows = trainees.filter(t => {
+          const text = `${t.name} ${t.trainee_id} ${t.course_name || ""}`.toLowerCase();
+          return text.includes(q) && (!f || t.outcome_type === f);
+        });
+        $("traineeRows").innerHTML = rows.length ? rows.map(t => `
+          <tr>
+            <td><div class="d-flex align-items-center gap-2"><div class="avatar" style="width:38px;height:38px;border-radius:11px;font-size:11px">${initials(t.name)}</div><div><div class="fw-bold small">${esc(t.name)}</div><div class="text-muted" style="font-size:10px">${esc(t.trainee_id)}</div></div></div></td>
+            <td>${esc(t.course_name || "—")}</td><td>${esc(t.district || "—")}</td>
+            <td>${t.attendance_percentage ?? "—"}%</td><td>${t.assessment_score ?? "—"}%</td>
+            <td>${badge(t.outcome_type)}</td><td>${badge(t.verification_status)}</td>
+            <td><a class="btn-soft" href="#/trainees/${encodeURIComponent(t.trainee_id)}">Open</a></td>
+          </tr>`).join("") : `<tr><td colspan="8"><div class="empty">No matching trainees.</div></td></tr>`;
+      }
+      $("traineeSearch").addEventListener("input",fill);
+      $("outcomeFilter").addEventListener("change",fill);
+      fill();
+    }
+    async function loadTrainees(){ await renderTrainees(); }
+
+    function canWrite() {
+      return state.admin?.role === "SUPER_ADMIN";
+    }
+
+    function claimActionButtons(c) {
+      if (!canWrite()) {
+        return `<span class="small text-muted"><i class="bi bi-eye me-1"></i>Auditor view</span>`;
+      }
+      return `
+        <div class="d-flex gap-1 flex-wrap">
+          <button class="btn-success-soft" onclick="openAction('claim','${esc(c.claim_id)}','VERIFIED')">Verify</button>
+          <button class="btn-danger-soft" onclick="openAction('claim','${esc(c.claim_id)}','FLAGGED')">Flag</button>
+          <button class="btn-soft" onclick="openAction('claim','${esc(c.claim_id)}','REJECTED')">Reject</button>
+        </div>`;
+    }
+
+    async function renderClaims() {
+      clearCharts();
+      renderLoading("Claims & Verification");
+      const claims = await api("/claims");
+      state.cache.claims = claims;
+
+      const counts = ["VERIFIED","FLAGGED","REJECTED","PENDING"].map(s => [s,claims.filter(c => c.status === s).length]);
+      $("app").innerHTML = `
+        ${layout("Claims & Verification","Triage outcome claims, inspect evidence, and apply auditable administrative actions.",
+          `<button class="btn-brand" onclick="renderClaims()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh queue</button>`)}
+        <div class="kpi-grid mb-3">
+          ${statCard("bi-check-circle",counts[0][1],"Admin verified","green")}
+          ${statCard("bi-flag",counts[1][1],"Flagged","red")}
+          ${statCard("bi-x-circle",counts[2][1],"Rejected","red")}
+          ${statCard("bi-hourglass-split",counts[3][1],"Pending","amber")}
+        </div>
+        <div class="cardx section-card">
+          <div class="d-flex justify-content-between mb-3">
+            <div><div class="section-title">Verification queue</div><div class="section-sub">Automated verification is shown separately from administrative disposition.</div></div>
+            <input id="claimSearch" class="form-control" style="max-width:280px" placeholder="Search claim / trainee">
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Claim</th><th>Trainee</th><th>Outcome</th><th>Reported by</th><th>Engine</th><th>Admin status</th><th>Actions</th></tr></thead>
+              <tbody id="claimRows"></tbody>
+            </table>
+          </div>
+        </div>`;
+      function fill() {
+        const q = $("claimSearch").value.toLowerCase();
+        const rows = claims.filter(c => `${c.claim_id} ${c.trainee_id} ${c.outcome_type}`.toLowerCase().includes(q));
+        $("claimRows").innerHTML = rows.length ? rows.map(c => `
+          <tr>
+            <td><button class="btn-soft" onclick="openClaim('${esc(c.claim_id)}')">${esc(c.claim_id)}</button></td>
+            <td><a href="#/trainees/${encodeURIComponent(c.trainee_id)}" class="fw-bold text-primary">${esc(c.trainee_id)}</a></td>
+            <td>${badge(c.outcome_type)}</td>
+            <td>${esc(c.reported_by || "—")}</td>
+            <td>${badge(c.verification_status)}</td>
+            <td>${badge(c.status)}</td>
+            <td>${claimActionButtons(c)}</td>
+          </tr>`).join("") : `<tr><td colspan="7"><div class="empty">No claims found.</div></td></tr>`;
+      }
+      $("claimSearch").addEventListener("input",fill); fill();
+    }
+
+    async function openClaim(id) {
+      const data = await api(`/claims/${encodeURIComponent(id)}`);
+      $("drawerTitle").textContent = data.claim.claim_id;
+      $("drawerSub").textContent = `${data.claim.trainee_id} · ${pretty(data.claim.outcome_type)}`;
+      $("drawerBody").innerHTML = `
+        <div class="mb-3">${badge(data.claim.status || "PENDING")} ${badge(data.verification?.[0]?.verification_status || "PENDING")}</div>
+        <div class="row g-2 mb-4">
+          ${meta("Effective from",data.claim.effective_from)}
+          ${meta("Reported by",data.claim.reported_by)}
+          ${meta("Occupation",data.claim.occupation)}
+          ${meta("Location",data.claim.location)}
+        </div>
+        <div class="fw-bold mb-2">Evidence</div>
+        ${(data.evidence || []).length ? data.evidence.map(e => `
+          <div class="evidence"><div class="d-flex gap-2"><div class="evidence-icon"><i class="bi bi-file-earmark-check"></i></div><div><div class="fw-bold small">${esc(e.source_name)}</div><div class="text-muted" style="font-size:11px">${esc(e.evidence_type)} · ${badge(e.evidence_result)}</div></div></div></div>`).join("") : `<div class="empty p-3">No evidence records.</div>`}
+        <div class="fw-bold mb-2 mt-4">Verification history</div>
+        ${(data.verification || []).length ? data.verification.map(v => `<div class="border rounded-3 p-3 mb-2"><div class="d-flex justify-content-between">${badge(v.verification_status)}<span class="small text-muted">${esc(v.verified_at)}</span></div><div class="small mt-2">${esc(v.verification_method || "—")}</div></div>`).join("") : `<div class="empty p-3">No verification record.</div>`}
+      `;
+      openDrawer();
+    }
+
+    async function renderFollowups() {
+      clearCharts(); renderLoading("Follow-up Tracing");
+      const rows = await api("/followups");
+      $("app").innerHTML = `
+        ${layout("Follow-up Tracing","Track outreach attempts without confusing non-response with unemployment.",
+          `<button class="btn-brand" onclick="renderFollowups()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh</button>`)}
+        <div class="cardx section-card">
+          <div class="section-title">Follow-up records</div>
+          <div class="section-sub mb-3">${rows.length} records</div>
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Follow-up</th><th>Trainee</th><th>Checkpoint</th><th>Channel</th><th>Attempts</th><th>Status</th><th>Notes</th><th>Action</th></tr></thead>
+            <tbody>${rows.length ? rows.map(r => `
+              <tr>
+                <td class="fw-bold">${esc(r.followup_id)}</td><td>${esc(r.trainee_id)}</td><td>${esc(r.checkpoint)}</td><td>${esc(r.channel)}</td><td>${esc(r.attempt_number)}</td>
+                <td>${badge(r.call_status || r.response_status || "PENDING")}</td><td>${esc(r.notes || "—")}</td>
+                <td>${canWrite() ? `<button class="btn-soft" onclick="updateFollowup('${esc(r.followup_id)}')">Update</button>` : `<span class="small text-muted">Read only</span>`}</td>
+              </tr>`).join("") : `<tr><td colspan="8"><div class="empty">No follow-up records.</div></td></tr>`}</tbody>
+          </table></div>
+        </div>`;
+    }
+
+    async function updateFollowup(id) {
+      const status = prompt("Call status (CONTACTED / NO_RESPONSE / RESOLVED / ESCALATE):","CONTACTED");
+      if (!status) return;
+      const notes = prompt("Notes:","");
+      try {
+        await api(`/api/followups/${encodeURIComponent(id)}/status`,{method:"PATCH",body:JSON.stringify({call_status:status,notes})});
+        showToast(`Follow-up ${id} updated`);
+        renderFollowups();
+      } catch(e){showToast(e.message,"error")}
+    }
+
+    async function renderAudit() {
+      clearCharts(); renderLoading("Audit Log");
+      const rows = await api("/api/admin/audit-log");
+      $("app").innerHTML = `
+        ${layout("Admin Audit Log","Every administrative write action is recorded with actor, entity, before/after values and remarks.",
+          `<button class="btn-brand" onclick="renderAudit()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh</button>`)}
+        <div class="cardx section-card"><div class="table-wrap"><table class="table">
+          <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Entity</th><th>ID</th><th>Remarks</th></tr></thead>
+          <tbody>${rows.length ? rows.map(r => `<tr><td>${esc(r.created_at)}</td><td>${esc(r.username)}</td><td>${badge(r.action)}</td><td>${esc(r.entity_type)}</td><td>${esc(r.entity_id)}</td><td>${esc(r.remarks || "—")}</td></tr>`).join("") : `<tr><td colspan="6"><div class="empty">No audit events yet.</div></td></tr>`}</tbody>
+        </table></div></div>`;
+    }
+
+    async function renderAnalytics() {
+      clearCharts(); renderLoading("Deep Analytics");
+      const [overview, verification, employment, wages, courses, providers, types, byDistrict, followups] = await Promise.all([
+        api("/analytics/overview"),
+        api("/analytics/verification"),
+        api("/analytics/employment"),
+        api("/analytics/wages"),
+        api("/analytics/course-outcomes"),
+        api("/analytics/provider-performance"),
+        api("/analytics/employment-by-type"),
+        api("/analytics/by-district"),
+        api("/analytics/followups")
+      ]);
+
+      $("app").innerHTML = `
+        ${layout("Deep Analytics","Operational analytics from the SQLite database with graphs for each major category. Export CSVs below for offline analysis.",
+          `<button class="btn-brand" onclick="renderAnalytics()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh</button>`)}
+        <div class="kpi-grid mb-3">
+          ${statCard("bi-people",overview.trainees,"Trainees","blue")}
+          ${statCard("bi-briefcase",employment.employed_trainees,`${employment.employment_rate}% with employment records`,"green")}
+          ${statCard("bi-cash-stack",overview.wage_records,"Wage records","amber")}
+          ${statCard("bi-building",overview.providers,"Providers","blue")}
+        </div>
+        <div class="row g-3">
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Verification mix</div><div class="section-sub">Latest verification records by status</div><div class="chart-box mt-3"><canvas id="aVerify"></canvas></div></div></div>
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Employment by type</div><div class="section-sub">Distribution of employment record types</div><div class="chart-box mt-3"><canvas id="aEmpType"></canvas></div></div></div>
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Wage bands</div><div class="section-sub">Distribution of wage records</div><div class="chart-box mt-3"><canvas id="aWage"></canvas></div></div></div>
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Outcomes by district</div><div class="section-sub">Trainees and positive outcomes per district</div><div class="chart-box mt-3"><canvas id="aDistrict"></canvas></div></div></div>
+          <div class="col-12"><div class="cardx section-card"><div class="section-title">Course employment rate</div><div class="section-sub">Employment records linked to trainees in each training course</div><div class="chart-box mt-3"><canvas id="aCourse"></canvas></div></div></div>
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Provider performance</div><div class="section-sub">Placement / outcome rates by training provider</div><div class="chart-box mt-3"><canvas id="aProvider"></canvas></div></div></div>
+          <div class="col-xl-6"><div class="cardx section-card"><div class="section-title">Follow-up responses</div><div class="section-sub">Checkpoint follow-up outcomes</div><div class="chart-box mt-3"><canvas id="aFollowup"></canvas></div></div></div>
+        </div>
+        ${csvExportPanel()}`;
+
+      const vmap = Object.fromEntries((verification.statuses||[]).map(x=>[x.status,x.count]));
+      chart("aVerify",{type:"doughnut",data:{labels:["Corroborated","Supported","Reported","Conflict","Unknown"],datasets:[{data:["CORROBORATED","SUPPORTED","REPORTED","CONFLICT","UNKNOWN"].map(k=>vmap[k]||0),backgroundColor:["#10B981","#2563EB","#F59E0B","#EF4444","#94A3B8"],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:"62%",plugins:{legend:{position:"bottom"}}}});
+
+      const typeMap = Object.fromEntries((types||[]).map(x=>[String(x.employment_type||"UNKNOWN").toUpperCase(), x.count]));
+      chart("aEmpType",{type:"doughnut",data:{labels:Object.keys(typeMap).map(pretty),datasets:[{data:Object.values(typeMap),backgroundColor:["#2563EB","#10B981","#F59E0B","#8B5CF6","#EF4444"],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:"60%",plugins:{legend:{position:"bottom"}}}});
+
+      const wd=wages.distribution||[];
+      chart("aWage",{type:"bar",data:{labels:wd.map(x=>x.wage_band),datasets:[{label:"Records",data:wd.map(x=>x.count),backgroundColor:"#2563EB",borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});
+
+      const districts = Array.isArray(byDistrict) ? byDistrict : (byDistrict?.districts || byDistrict?.rows || []);
+      chart("aDistrict",{type:"bar",data:{labels:districts.map(x=>x.district||x.name||"—"),datasets:[{label:"Trainees",data:districts.map(x=>x.trainees??x.trainee_count??0),backgroundColor:"#8B5CF6",borderRadius:8},{label:"Placed",data:districts.map(x=>x.positive_outcomes??x.placements??x.employed??0),backgroundColor:"#10B981",borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});
+
+      chart("aCourse",{type:"bar",data:{labels:(courses||[]).map(x=>x.course_name),datasets:[{label:"Employment rate %",data:(courses||[]).map(x=>x.employment_rate),backgroundColor:"#10B981",borderRadius:8}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100},y:{grid:{display:false}}}}});
+
+      const provList = Array.isArray(providers) ? providers : (providers?.providers || providers?.rows || []);
+      chart("aProvider",{type:"bar",data:{labels:provList.map(x=>x.provider_name||x.name||"—"),datasets:[{label:"Outcome rate %",data:provList.map(x=>x.employment_rate??x.placement_rate??x.outcome_rate??0),backgroundColor:"#4F46E5",borderRadius:8}]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100},y:{grid:{display:false}}}}});
+
+      const fu = followups || {};
+      const fuRows = fu.response_distribution || fu.by_outcome || fu.outcomes || [];
+      const fuLabels = fuRows.map(x => pretty(x.response_status || x.outcome || x.checkpoint || x.status || "—"));
+      const fuData = fuRows.map(x => x.count ?? x.total ?? 0);
+      chart("aFollowup",{
+        type:"bar",
+        data:{
+          labels: fuLabels.length ? fuLabels : ["No data"],
+          datasets:[{label:"Follow-ups",data:fuData.length?fuData:[0],backgroundColor:["#10B981","#F59E0B","#EF4444","#2563EB","#8B5CF6"],borderRadius:8}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}
+      });
+    }
+
+    async function renderTraineeProfile(id) {
+      clearCharts(); renderLoading("Trainee profile");
+      const data = await api(`/trainees/${encodeURIComponent(id)}`);
+      const t = data.trainee;
+      const training = data.training_records?.[0];
+      const claims = data.claims || [];
+      const employment = data.employment || [];
+      const wages = data.wages || [];
+      const transitions = data.transitions || [];
+      const claim = claims[claims.length - 1];
+      const currentOutcome = claim?.outcome_type || "UNKNOWN";
+      const verification = claim?.verification_status || "PENDING";
+
+      const timeline = [];
+      if (t.consent_date) timeline.push({date:t.consent_date,title:"Consent recorded",desc:`Consent status: ${t.consent_status}`});
+      if (training?.enrollment_date) timeline.push({date:training.enrollment_date,title:"Training enrolled",desc:`${training.course_name || training.course_id} · ${training.provider_name || training.provider_id}`});
+      if (training?.completion_date) timeline.push({date:training.completion_date,title:"Training completed",desc:`Certification: ${training.certification_status || "—"}`});
+      claims.forEach(c=>timeline.push({date:c.claim_date || c.effective_from,title:`Outcome claim: ${pretty(c.outcome_type)}`,desc:`Reported by ${c.reported_by || "—"} · Engine status ${c.verification_status || "PENDING"}`}));
+      employment.forEach(e=>timeline.push({date:e.start_date,title:`Employment record: ${pretty(e.employment_type)}`,desc:`${e.employer_name || e.employer_id || "Employer unavailable"} · ${e.occupation || "Occupation unavailable"}`}));
+      transitions.forEach(x=>timeline.push({date:x.transition_date,title:`Transition: ${pretty(x.from_status)} → ${pretty(x.to_status)}`,desc:x.reason || "No reason recorded"}));
+
+      $("app").innerHTML = `
+        <div class="mb-3"><a href="#/trainees" class="small text-primary"><i class="bi bi-arrow-left me-1"></i> Back to directory</a></div>
+        <div class="cardx profile-hero mb-3">
+          <div class="d-flex flex-wrap justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar">${initials(t.name)}</div>
+              <div><div class="profile-name">${esc(t.name)}</div><div class="text-muted small">${esc(t.trainee_id)} · ${esc(t.district)}</div><div class="mt-2">${badge(currentOutcome)} ${badge(verification)}</div></div>
+            </div>
+            <div class="text-end"><div class="text-muted" style="font-size:10px;text-transform:uppercase;font-weight:800">Consent</div><div class="fw-bold">${esc(t.consent_status || "—")}</div></div>
+          </div>
+          <hr>
+          <div class="meta-grid">
+            ${meta("Education",t.education_level)}${meta("Age group",t.age_group)}${meta("Gender",t.gender)}${meta("District",t.district)}
+            ${meta("Course",training?.course_name)}${meta("Provider",training?.provider_name)}${meta("Attendance",training?.attendance_percentage != null ? training.attendance_percentage+"%" : "—")}${meta("Assessment",training?.assessment_score != null ? training.assessment_score+"%" : "—")}
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-xl-7">
+            <div class="cardx section-card h-100">
+              <div class="section-title">Longitudinal timeline</div><div class="section-sub mb-4">Training → outcome → evidence → employment → transition.</div>
+              <div class="timeline">${timeline.length ? timeline.map(x=>`<div class="tl-item"><div class="tl-dot"></div><div class="tl-date">${esc(x.date || "Date unavailable")}</div><div class="tl-title">${esc(x.title)}</div><div class="tl-desc">${esc(x.desc)}</div></div>`).join("") : `<div class="empty">No timeline events.</div>`}</div>
+            </div>
+          </div>
+          <div class="col-xl-5">
+            <div class="cardx section-card mb-3">
+              <div class="section-title">Outcome claim</div><div class="section-sub mb-3">Current claim and verification state.</div>
+              ${claim ? `<div class="meta-grid" style="grid-template-columns:1fr 1fr">${meta("Claim",claim.claim_id)}${meta("Outcome",pretty(claim.outcome_type))}${meta("Reported by",claim.reported_by)}${meta("Engine",claim.verification_status)}</div><div class="d-flex gap-2 mt-3"><button class="btn-brand" onclick="openClaim('${esc(claim.claim_id)}')">Inspect evidence</button><button class="btn-soft" onclick="openAction('claim','${esc(claim.claim_id)}','VERIFIED')">Admin verify</button></div>` : `<div class="empty p-3">No outcome claim.</div>`}
+            </div>
+            <div class="cardx section-card">
+              <div class="section-title">Employment & wages</div><div class="section-sub mb-3">Verification of employment is independent from wage verification.</div>
+              ${employment.length ? employment.map(e=>`<div class="evidence"><div class="d-flex justify-content-between"><div><div class="fw-bold small">${esc(e.employer_name || e.employer_id)}</div><div class="text-muted" style="font-size:11px">${esc(e.occupation)} · ${esc(e.start_date)}</div></div>${badge(e.verification_status)}</div><button class="btn-soft mt-2" onclick="updateEmployment('${esc(e.employment_id)}')">Update status</button></div>`).join("") : `<div class="empty p-3">No employment records.</div>`}
+              ${wages.length ? `<div class="small fw-bold mt-3 mb-2">Wage records</div>` + wages.map(w=>`<div class="d-flex justify-content-between border-bottom py-2 small"><span>${esc(w.wage_band)}</span>${badge(w.verification_status)}</div>`).join("") : ""}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function updateEmployment(id) {
+      const status = prompt("Employment verification status (VERIFIED / REPORTED / REJECTED / PENDING / CONFLICT / UNKNOWN):","VERIFIED");
+      if (!status) return;
+      const remarks = prompt("Audit remark:","");
+      try {
+        await api(`/api/employment/${encodeURIComponent(id)}/status`,{method:"PATCH",body:JSON.stringify({verification_status:status,remarks})});
+        showToast(`Employment ${id} updated`);
+        const r=route(); if(r.startsWith("/trainees/")) renderTraineeProfile(decodeURIComponent(r.split("/")[2]));
+      } catch(e){showToast(e.message,"error")}
+    }
+
+    function openAction(type,id,action) {
+      $("modalRecordId").value=id;
+      $("modalActionType").value=type;
+      $("modalRemarks").value="";
+      $("modalTitle").textContent = `${pretty(action)} ${type}`;
+      $("modalDescription").textContent = `This administrative action will be written to the audit log. It does not alter the underlying evidence records.`;
+      $("modalConfirm").dataset.action=action;
+      new bootstrap.Modal($("actionModal")).show();
+    }
+
+    $("modalConfirm").addEventListener("click", async () => {
+      const id=$("modalRecordId").value;
+      const type=$("modalActionType").value;
+      const action=$("modalConfirm").dataset.action;
+      const remarks=$("modalRemarks").value;
+      try {
+        if(type==="claim"){
+          await api(`/api/claims/${encodeURIComponent(id)}/status`,{method:"PATCH",body:JSON.stringify({status:action,remarks})});
+          showToast(`Claim ${id} marked ${action}`);
+        }
+        bootstrap.Modal.getInstance($("actionModal"))?.hide();
+        if(route()==="/claims") renderClaims();
+        else if(route().startsWith("/trainees/")) renderTraineeProfile(decodeURIComponent(route().split("/")[2]));
+      } catch(e){showToast(e.message,"error")}
+    });
+
+    function openDrawer(){ $("drawer").classList.add("open"); $("overlay").classList.add("show"); }
+    function closeDrawer(){ $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
+    $("drawerClose").addEventListener("click",closeDrawer); $("overlay").addEventListener("click",closeDrawer);
+
+
+    /* ========== TRAINEE PORTAL (privacy-scoped) ========== */
+    async function loadMyJourney() {
+      return api("/api/me/journey");
+    }
+
+    async function renderMyJourney() {
+      clearCharts();
+      renderLoading("My journey");
+      const data = await loadMyJourney();
+      const t = data.trainee || {};
+      const s = data.summary || {};
+      $("app").innerHTML = `
+        ${layout("My journey", "Your consent-based training and livelihood pathway — only you and authorised officers can see this.", "", "🚀")}
+        <div class="trainee-hero mb-4">
+          <div class="d-flex flex-wrap justify-content-between gap-3">
+            <div>
+              <div class="text-muted small">Trainee ID ${esc(t.trainee_id)}</div>
+              <div class="fs-3 fw-bold">${esc(t.name)}</div>
+              <div class="text-muted">${esc(t.district || "")} · Consent ${badge(t.consent_status)}</div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <div class="meta"><div class="small text-muted">Latest verification</div><div class="fw-bold">${badge(s.latest_verification)}</div></div>
+              <div class="meta"><div class="small text-muted">Employment signal</div><div class="fw-bold">${s.has_employment ? badge("PRESENT") : badge("NONE")}</div></div>
+              <div class="meta"><div class="small text-muted">Follow-ups</div><div class="fw-bold">${esc(s.followup_count ?? 0)}</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <div class="cardx section-card">
+              <div class="section-title">Longitudinal timeline</div>
+              <div class="section-sub mb-3">Training → outcome → employment → follow-up</div>
+              ${(data.timeline || []).length ? data.timeline.map((step,i)=>`
+                <div class="journey-step">
+                  <div class="journey-dot">${i+1}</div>
+                  <div>
+                    <div class="fw-semibold">${esc(step.title)}</div>
+                    <div class="small text-muted">${esc(step.date || "")}</div>
+                    <div class="small mt-1">${esc(step.detail || "")}</div>
+                  </div>
+                </div>`).join("") : `<div class="empty">No timeline events yet.</div>`}
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="cardx section-card mb-3">
+              <div class="section-title">Why this exists</div>
+              <div class="small text-muted">
+                Skilling systems often stop at certification. KaushalTrace links your training with
+                placement and livelihood signals, with verification that is evidence-based — not automatic claims.
+              </div>
+            </div>
+            <div class="cardx section-card">
+              <div class="section-title">Your outcomes</div>
+              ${(data.outcomes || []).length ? data.outcomes.map(o=>`
+                <div class="meta mb-2">
+                  <div class="d-flex justify-content-between gap-2">
+                    <strong>${pretty(o.outcome_type)}</strong>${badge(o.verification_status)}
+                  </div>
+                  <div class="small text-muted mt-1">${esc(o.occupation || "—")} · ${esc(o.location || "—")}</div>
+                  <div class="small">Evidence sources: ${esc(o.evidence_count)}</div>
+                </div>`).join("") : `<div class="empty small">No outcome claims on record yet.</div>`}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function renderMyTraining() {
+      clearCharts();
+      renderLoading("My training");
+      const data = await loadMyJourney();
+      const rows = data.training || [];
+      $("app").innerHTML = `
+        ${layout("My training", "Enrolment, attendance, assessment and certification — linked to your consent record.", "", "📚")}
+        <div class="cardx section-card">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead><tr><th>Course</th><th>Provider</th><th>Attendance</th><th>Assessment</th><th>Certification</th><th>Status</th></tr></thead>
+              <tbody>
+                ${rows.map(t=>`<tr>
+                  <td><div class="fw-semibold">${esc(t.course_name)}</div><div class="small text-muted">${esc(t.enrollment_date)} → ${esc(t.completion_date || "—")}</div></td>
+                  <td>${esc(t.provider_name)}</td>
+                  <td>${t.attendance_percentage != null ? esc(t.attendance_percentage)+"%" : "—"}</td>
+                  <td>${t.assessment_score != null ? esc(t.assessment_score) : "—"}</td>
+                  <td>${badge(t.certification_status)}</td>
+                  <td>${badge(t.verification_status)}</td>
+                </tr>`).join("") || `<tr><td colspan="6" class="text-muted">No training records.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+    }
+
+    async function renderMyOutcomes() {
+      clearCharts();
+      renderLoading("Outcomes & work");
+      const data = await loadMyJourney();
+      $("app").innerHTML = `
+        ${layout("Outcomes & work", "Employment, self-employment and apprenticeship signals — with wage bands verified independently.", "", "💼")}
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="cardx section-card">
+              <div class="section-title">Outcome claims</div>
+              ${(data.outcomes||[]).map(o=>`
+                <div class="evidence mb-2">
+                  <div class="d-flex justify-content-between"><strong>${pretty(o.outcome_type)}</strong>${badge(o.verification_status)}</div>
+                  <div class="small text-muted">${esc(o.claim_date)} · reported by ${esc(o.reported_by)}</div>
+                  <div class="small mt-1">${esc(o.occupation||"")} ${o.location? "· "+esc(o.location):""}</div>
+                </div>`).join("") || `<div class="empty">No claims yet.</div>`}
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="cardx section-card mb-3">
+              <div class="section-title">Employment records</div>
+              ${(data.employment||[]).map(e=>`
+                <div class="meta mb-2">
+                  <div class="fw-semibold">${esc(e.employer_name||"Employer")}</div>
+                  <div class="small">${esc(e.occupation||"")} · ${pretty(e.employment_type)}</div>
+                  <div class="small text-muted">${esc(e.start_date)} → ${esc(e.end_date||"ongoing")}</div>
+                  ${badge(e.verification_status)}
+                </div>`).join("") || `<div class="empty small">No employment record (this does not mean unemployed).</div>`}
+            </div>
+            <div class="cardx section-card">
+              <div class="section-title">Wage progression</div>
+              ${(data.wages||[]).map(w=>`
+                <div class="d-flex justify-content-between align-items-center meta mb-2">
+                  <span>${esc(w.wage_band)}</span>
+                  <span class="small text-muted">${esc(w.effective_from)}</span>
+                  ${badge(w.verification_status)}
+                </div>`).join("") || `<div class="empty small">No wage records yet.</div>`}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    async function renderMyFollowups() {
+      clearCharts();
+      renderLoading("Follow-ups");
+      const data = await loadMyJourney();
+      $("app").innerHTML = `
+        ${layout("Follow-ups", "Assisted check-ins at retention checkpoints — 3M, 6M and 12M livelihood signals.", "", "📞")}
+        <div class="cardx section-card">
+          <div class="table-responsive">
+            <table class="table">
+              <thead><tr><th>Checkpoint</th><th>Channel</th><th>Response</th><th>Date</th><th>Outcome noted</th></tr></thead>
+              <tbody>
+                ${(data.followups||[]).map(f=>`<tr>
+                  <td>${esc(f.checkpoint)}</td><td>${esc(f.channel)}</td>
+                  <td>${badge(f.response_status)}</td>
+                  <td>${esc(f.response_date||"—")}</td>
+                  <td>${esc(f.outcome||"—")}</td>
+                </tr>`).join("") || `<tr><td colspan="5" class="text-muted">No follow-ups recorded yet.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+    }
+
+    async function renderMyPrivacy() {
+      clearCharts();
+      renderLoading("Consent & privacy");
+      const profile = await api("/api/me/profile");
+      $("app").innerHTML = `
+        ${layout("Consent & privacy", "Low-burden, privacy-conscious tracking — your portal shows only your linked record.", "", "🔒")}
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="cardx section-card">
+              <div class="section-title">Consent record</div>
+              <div class="meta mb-2"><span class="text-muted">Status</span><div class="fs-5">${badge(profile.consent_status)}</div></div>
+              <div class="meta mb-2"><span class="text-muted">Consent date</span><div class="fw-semibold">${esc(profile.consent_date||"—")}</div></div>
+              <div class="meta"><span class="text-muted">Trainee ID</span><div class="fw-semibold">${esc(profile.trainee_id)}</div></div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="cardx section-card">
+              <div class="section-title">What others cannot see</div>
+              <ul class="small text-muted mb-0">
+                <li>Other trainees' profiles, wages or outcomes</li>
+                <li>Programme-wide analytics and provider rankings</li>
+                <li>Admin audit logs and verification overrides</li>
+              </ul>
+              <hr>
+              <div class="small">You are signed in as <strong>${esc(profile.username)}</strong> (${esc(profile.name)}).</div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+
+    async function router() {
+      if (!state.token) { showLogin(); return; }
+      updateNav();
+      applyShellForRole();
+      const r=route();
+      try {
+        // Trainee portal
+        if (isTrainee()) {
+          if (r==="/my-journey") return await renderMyJourney();
+          if (r==="/my-training") return await renderMyTraining();
+          if (r==="/my-outcomes") return await renderMyOutcomes();
+          if (r==="/my-followups") return await renderMyFollowups();
+          if (r==="/my-privacy") return await renderMyPrivacy();
+          location.hash = "#/my-journey";
+          return;
+        }
+        // Admin portal
+        if(r==="/dashboard") return await renderDashboard();
+        if(r==="/trainees") return await renderTrainees();
+        if(r.startsWith("/trainees/")) return await renderTraineeProfile(decodeURIComponent(r.split("/")[2]));
+        if(r==="/claims" || r==="/verification") return await renderClaims();
+        if(r==="/followups") return await renderFollowups();
+        if(r==="/analytics") return await renderAnalytics();
+        if(r==="/audit") return await renderAudit();
+        location.hash="#/dashboard";
+      } catch(e) {
+        $("app").innerHTML=`<div class="cardx section-card reveal"><div class="empty"><i class="bi bi-exclamation-octagon fs-2"></i><div class="fw-bold mt-2">Could not load this view</div><div class="small mt-1">${esc(e.message)}</div><button class="btn-brand mt-3" onclick="router()">Retry</button></div></div>`;
+      } finally {
+        paintIcons();
+      }
+    }
+
+    $("loginForm").addEventListener("submit", async e=>{
+      e.preventDefault();
+      $("loginError").classList.add("d-none");
+      try {
+        const portal = $("loginPortal") ? $("loginPortal").value : "auto";
+        await login($("loginUsername").value.trim(), $("loginPassword").value, portal);
+      } catch(err){ $("loginError").textContent=err.message; $("loginError").classList.remove("d-none"); }
+    });
+
+    document.querySelectorAll(".portal-tab").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        document.querySelectorAll(".portal-tab").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        const portal = btn.getAttribute("data-portal");
+        if ($("loginPortal")) $("loginPortal").value = portal;
+        if (portal === "admin") {
+          $("loginUsername").value = "admin";
+          $("loginPassword").value = "admin@kaushaltrace2026";
+          if ($("loginHint")) $("loginHint").innerHTML = "<strong>Admin demo:</strong> admin / admin@kaushaltrace2026";
+        } else {
+          $("loginUsername").value = "trainee1";
+          $("loginPassword").value = "trainee123";
+          if ($("loginHint")) $("loginHint").innerHTML = "<strong>Trainee demo:</strong> trainee1 / trainee123 (KT0001)<br>Also: trainee2 · trainee3 / trainee123";
+        }
+      });
+    });
+
+    $("logoutBtn").addEventListener("click",async()=>{
+      try { if(state.token) await api("/api/auth/logout",{method:"POST"}); } catch {}
+      state.token=null; state.user=null; state.admin=null;
+      localStorage.removeItem("kt_token");
+      localStorage.removeItem("kt_admin_token");
+      showLogin();
+    });
+
+    $("refreshBtn").addEventListener("click",router);
+    $("menuToggle").addEventListener("click",()=>{ $("sidebar").classList.toggle("open"); });
+    $("globalSearch").addEventListener("keydown",e=>{
+      if(e.key==="Enter"){
+        const q=e.target.value.trim();
+        if(q) location.hash=`#/trainees`;
+      }
+    });
+
+
+    const savedTheme = localStorage.getItem("kt_theme");
+    if(savedTheme === "dark") document.body.classList.add("dark");
+
+    $("themeBtn").addEventListener("click",()=>{
+      document.body.classList.toggle("dark");
+      localStorage.setItem("kt_theme",document.body.classList.contains("dark") ? "dark" : "light");
+      $("themeBtn").innerHTML = document.body.classList.contains("dark")
+        ? '<i class="bi bi-sun"></i>'
+        : '<i class="bi bi-moon-stars"></i>';
+      // Re-render current view so Chart.js picks up light/dark text colors
+      try { if (state.token && typeof router === "function") router(); } catch (_) {}
+    });
+
+    async function boot() {
+      if(!state.token){showLogin();return;}
+      try{
+        state.user = await api("/api/auth/me");
+        state.admin = isAdmin() ? state.user : null;
+        hideLogin();
+        applyShellForRole();
+        updateUserChrome();
+        if (isTrainee() && (!location.hash || location.hash === "#/" || location.hash === "#/dashboard")) {
+          location.hash = "#/my-journey";
+        }
+        router();
+      }catch{showLogin();}
+    }
+
+    window.addEventListener("hashchange",router);
+    window.addEventListener("DOMContentLoaded", () => {
+      const beam = document.getElementById("cursorBeam");
+      if (beam) {
+        window.addEventListener("mousemove", (e) => {
+          beam.style.left = e.clientX + "px";
+          beam.style.top = e.clientY + "px";
+        });
+      }
+      boot();
+    });
+  </script>
+</body>
+</html>
